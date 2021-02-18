@@ -205,7 +205,7 @@ pub fn ndarray_column_major<'i, E: Encoding>(
     let mut dims = Vec::new();
     let mut rest = i;
     for _ in 0..n {
-        let (inner_rest, d) = E::u64(rest)?;
+        let (inner_rest, d) = E::i64(rest)?;
         rest = inner_rest;
         dims.push(d);
     }
@@ -379,7 +379,7 @@ mod helpers {
     pub(crate) fn sequence_with_given_length_without_check<'i, E: Encoding>(
         i: &'i [u8],
         inner_type: &EType,
-        len: u64,
+        len: i64,
     ) -> IResult<&'i [u8], Vec<HailValue>> {
         let mut rest = i;
 

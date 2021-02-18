@@ -18,6 +18,10 @@ pub trait Encoding {
         nom::number::complete::le_u64::<&[u8], nom::error::Error<&[u8]>>(i)
     }
 
+    fn i32(i: &[u8]) -> IResult<&[u8], i32> {
+        nom::number::complete::le_i32::<&[u8], nom::error::Error<&[u8]>>(i)
+    }
+
     fn i64(i: &[u8]) -> IResult<&[u8], i64> {
         nom::number::complete::le_i64::<&[u8], nom::error::Error<&[u8]>>(i)
     }
@@ -63,6 +67,18 @@ pub struct UnsignedLEB128Encoder;
 impl Encoding for UnsignedLEB128Encoder {
     fn u32(i: &[u8]) -> IResult<&[u8], u32> {
         nom_leb128::leb128_u32::<&[u8], nom::error::Error<&[u8]>>(i)
+    }
+
+    fn u64(i: &[u8]) -> IResult<&[u8], u64> {
+        nom_leb128::leb128_u64::<&[u8], nom::error::Error<&[u8]>>(i)
+    }
+
+    fn i32(i: &[u8]) -> IResult<&[u8], i32> {
+        nom_leb128::leb128_i32::<&[u8], nom::error::Error<&[u8]>>(i)
+    }
+
+    fn i64(i: &[u8]) -> IResult<&[u8], i64> {
+        nom_leb128::leb128_i64::<&[u8], nom::error::Error<&[u8]>>(i)
     }
 }
 
