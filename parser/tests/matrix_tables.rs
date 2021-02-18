@@ -46,13 +46,13 @@ fn matrix_table_compat_150_0() -> Result<()> {
     Ok(())
 }
 
-// #[test]
-// fn matrix_table_compat_150_1() -> Result<()> {
-//     let _ = parser::load::matrix(Path::new(
-//         "..\\resources\\backward_compatability\\1.5.0\\matrix_table\\1.hmt",
-//     ))?;
-//     Ok(())
-// }
+#[test]
+fn matrix_table_compat_150_1() -> Result<()> {
+    let _ = parser::load::matrix(Path::new(
+        "..\\resources\\backward_compatability\\1.5.0\\matrix_table\\1.hmt",
+    ))?;
+    Ok(())
+}
 
 #[test]
 fn matrix_table_compat_150_2() -> Result<()> {
@@ -62,13 +62,13 @@ fn matrix_table_compat_150_2() -> Result<()> {
     Ok(())
 }
 
-// #[test]
-// fn matrix_table_compat_150_3() -> Result<()> {
-//     let _ = parser::load::matrix(Path::new(
-//         "..\\resources\\backward_compatability\\1.5.0\\matrix_table\\3.hmt",
-//     ))?;
-//     Ok(())
-// }
+#[test]
+fn matrix_table_compat_150_3() -> Result<()> {
+    let _ = parser::load::matrix(Path::new(
+        "..\\resources\\backward_compatability\\1.5.0\\matrix_table\\3.hmt",
+    ))?;
+    Ok(())
+}
 
 #[test]
 fn matrix_table_compat_150_4() -> Result<()> {
@@ -78,13 +78,13 @@ fn matrix_table_compat_150_4() -> Result<()> {
     Ok(())
 }
 
-// #[test]
-// fn matrix_table_compat_150_5() -> Result<()> {
-//     let _ = parser::load::matrix(Path::new(
-//         "..\\resources\\backward_compatability\\1.5.0\\matrix_table\\5.hmt",
-//     ))?;
-//     Ok(())
-// }
+#[test]
+fn matrix_table_compat_150_5() -> Result<()> {
+    let _ = parser::load::matrix(Path::new(
+        "..\\resources\\backward_compatability\\1.5.0\\matrix_table\\5.hmt",
+    ))?;
+    Ok(())
+}
 
 #[test]
 fn matrix_table_compat_150_6() -> Result<()> {
@@ -94,10 +94,218 @@ fn matrix_table_compat_150_6() -> Result<()> {
     Ok(())
 }
 
+#[test]
+fn matrix_table_compat_150_7() -> Result<()> {
+    let _ = parser::load::matrix(Path::new(
+        "..\\resources\\backward_compatability\\1.5.0\\matrix_table\\7.hmt",
+    ))?;
+    Ok(())
+}
+
+#[test]
+fn matrix_table_compat_140_0() -> Result<()> {
+    let _ = parser::load::matrix(Path::new(
+        "..\\resources\\backward_compatability\\1.4.0\\matrix_table\\0.hmt",
+    ))?;
+    Ok(())
+}
+
+#[test]
+fn matrix_table_compat_140_1() -> Result<()> {
+    let _ = parser::load::matrix(Path::new(
+        "..\\resources\\backward_compatability\\1.4.0\\matrix_table\\1.hmt",
+    ))?;
+    Ok(())
+}
+
+#[test]
+fn matrix_table_compat_140_2() -> Result<()> {
+    let _ = parser::load::matrix(Path::new(
+        "..\\resources\\backward_compatability\\1.4.0\\matrix_table\\2.hmt",
+    ))?;
+    Ok(())
+}
+
+#[test]
+fn matrix_table_compat_140_3() -> Result<()> {
+    let _ = parser::load::matrix(Path::new(
+        "..\\resources\\backward_compatability\\1.4.0\\matrix_table\\3.hmt",
+    ))?;
+    Ok(())
+}
+
+#[test]
+fn matrix_table_compat_140_4() -> Result<()> {
+    let _ = parser::load::matrix(Path::new(
+        "..\\resources\\backward_compatability\\1.4.0\\matrix_table\\4.hmt",
+    ))?;
+    Ok(())
+}
+
+#[test]
+fn matrix_table_compat_140_5() -> Result<()> {
+    let _ = parser::load::matrix(Path::new(
+        "..\\resources\\backward_compatability\\1.4.0\\matrix_table\\5.hmt",
+    ))?;
+    Ok(())
+}
+
+#[test]
+fn matrix_table_compat_140_6() -> Result<()> {
+    let _ = parser::load::matrix(Path::new(
+        "..\\resources\\backward_compatability\\1.4.0\\matrix_table\\6.hmt",
+    ))?;
+    Ok(())
+}
+
+#[test]
+fn matrix_table_compat_140_7() -> Result<()> {
+    let _ = parser::load::matrix(Path::new(
+        "..\\resources\\backward_compatability\\1.4.0\\matrix_table\\7.hmt",
+    ))?;
+    Ok(())
+}
+
+#[test]
+fn matrix_table_compat_130_0() -> Result<()> {
+    let _ = parser::load::matrix(Path::new(
+        "..\\resources\\backward_compatability\\1.3.0\\matrix_table\\0.hmt",
+    ))?;
+    Ok(())
+}
+
+#[test]
+fn matrix_table_compat_130_1() -> Result<()> {
+    let _ = parser::load::matrix(Path::new(
+        "..\\resources\\backward_compatability\\1.3.0\\matrix_table\\1.hmt",
+    ))?;
+    Ok(())
+}
+
+#[test]
+fn matrix_table_compat_130_2() -> Result<()> {
+    let _ = parser::load::matrix(Path::new(
+        "..\\resources\\backward_compatability\\1.3.0\\matrix_table\\2.hmt",
+    ))?;
+    Ok(())
+}
+
+#[test]
+fn matrix_table_compat_130_3() -> Result<()> {
+    let _ = parser::load::matrix(Path::new(
+        "..\\resources\\backward_compatability\\1.3.0\\matrix_table\\3.hmt",
+    ))?;
+    Ok(())
+}
+
+#[test]
+fn matrix_table_compat_130_4() -> Result<()> {
+    let _ = parser::load::matrix(Path::new(
+        "..\\resources\\backward_compatability\\1.3.0\\matrix_table\\4.hmt",
+    ))?;
+    Ok(())
+}
+
+#[test]
+fn matrix_table_compat_130_5() -> Result<()> {
+    let _ = parser::load::matrix(Path::new(
+        "..\\resources\\backward_compatability\\1.3.0\\matrix_table\\5.hmt",
+    ))?;
+    Ok(())
+}
+
+#[test]
+fn matrix_table_compat_120_0() -> Result<()> {
+    let _ = parser::load::matrix(Path::new(
+        "..\\resources\\backward_compatability\\1.2.0\\matrix_table\\0.hmt",
+    ))?;
+    Ok(())
+}
+
+#[test]
+fn matrix_table_compat_120_1() -> Result<()> {
+    let _ = parser::load::matrix(Path::new(
+        "..\\resources\\backward_compatability\\1.2.0\\matrix_table\\1.hmt",
+    ))?;
+    Ok(())
+}
+
+#[test]
+fn matrix_table_compat_120_2() -> Result<()> {
+    let _ = parser::load::matrix(Path::new(
+        "..\\resources\\backward_compatability\\1.2.0\\matrix_table\\2.hmt",
+    ))?;
+    Ok(())
+}
+
+#[test]
+fn matrix_table_compat_120_3() -> Result<()> {
+    let _ = parser::load::matrix(Path::new(
+        "..\\resources\\backward_compatability\\1.2.0\\matrix_table\\3.hmt",
+    ))?;
+    Ok(())
+}
+
+#[test]
+fn matrix_table_compat_120_4() -> Result<()> {
+    let _ = parser::load::matrix(Path::new(
+        "..\\resources\\backward_compatability\\1.2.0\\matrix_table\\4.hmt",
+    ))?;
+    Ok(())
+}
+
+#[test]
+fn matrix_table_compat_120_5() -> Result<()> {
+    let _ = parser::load::matrix(Path::new(
+        "..\\resources\\backward_compatability\\1.2.0\\matrix_table\\5.hmt",
+    ))?;
+    Ok(())
+}
+
 // #[test]
-// fn matrix_table_compat_150_7() -> Result<()> {
+// fn matrix_table_compat_110_0() -> Result<()> {
 //     let _ = parser::load::matrix(Path::new(
-//         "..\\resources\\backward_compatability\\1.5.0\\matrix_table\\7.hmt",
+//         "..\\resources\\backward_compatability\\1.1.0\\matrix_table\\0.hmt",
+//     ))?;
+//     Ok(())
+// }
+
+// #[test]
+// fn matrix_table_compat_110_1() -> Result<()> {
+//     let _ = parser::load::matrix(Path::new(
+//         "..\\resources\\backward_compatability\\1.1.0\\matrix_table\\1.hmt",
+//     ))?;
+//     Ok(())
+// }
+
+// #[test]
+// fn matrix_table_compat_110_2() -> Result<()> {
+//     let _ = parser::load::matrix(Path::new(
+//         "..\\resources\\backward_compatability\\1.1.0\\matrix_table\\2.hmt",
+//     ))?;
+//     Ok(())
+// }
+
+// #[test]
+// fn matrix_table_compat_110_3() -> Result<()> {
+//     let _ = parser::load::matrix(Path::new(
+//         "..\\resources\\backward_compatability\\1.1.0\\matrix_table\\3.hmt",
+//     ))?;
+//     Ok(())
+// }
+
+// #[test]
+// fn matrix_table_compat_110_4() -> Result<()> {
+//     let _ = parser::load::matrix(Path::new(
+//         "..\\resources\\backward_compatability\\1.1.0\\matrix_table\\4.hmt",
+//     ))?;
+//     Ok(())
+// }
+
+// #[test]
+// fn matrix_table_compat_110_5() -> Result<()> {
+//     let _ = parser::load::matrix(Path::new(
+//         "..\\resources\\backward_compatability\\1.1.0\\matrix_table\\5.hmt",
 //     ))?;
 //     Ok(())
 // }
