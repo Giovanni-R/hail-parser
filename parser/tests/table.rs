@@ -1,311 +1,101 @@
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
-use anyhow::Result;
+use anyhow::{Context, Result};
+
+fn parse_table(file: &str) -> Result<()> {
+    let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../resources")
+        .join(file);
+    let _ = parser::load::table(Path::new(&path))
+        .context(format!("Failed to load table in path: {:?}", path))?;
+    Ok(())
+}
 
 #[test]
 fn table_sample_vcf_rows() -> Result<()> {
-    let _ = parser::load::table(Path::new("..\\resources\\sample.vcf.mt\\rows"))?;
-    Ok(())
+    parse_table("sample.vcf.mt/rows")
 }
 
 #[test]
 fn table_custom_references() -> Result<()> {
-    let _ = parser::load::table(Path::new("..\\resources\\custom_references.t"))?;
-    Ok(())
+    parse_table("custom_references.t")
 }
 
 #[test]
 fn table_custom_references_2() -> Result<()> {
-    let _ = parser::load::table(Path::new("..\\resources\\custom_references_2.t"))?;
-    Ok(())
+    parse_table("custom_references_2.t")
 }
 
 #[test]
 fn table_required_globals() -> Result<()> {
-    let _ = parser::load::table(Path::new("..\\resources\\required_globals.ht"))?;
-    Ok(())
+    parse_table("required_globals.ht")
 }
 
 #[test]
 fn table_small_pheno() -> Result<()> {
-    let _ = parser::load::table(Path::new("..\\resources\\small-pheno.t"))?;
-    Ok(())
+    parse_table("small-pheno.t")
 }
 
 #[test]
 fn table_three_key() -> Result<()> {
-    let _ = parser::load::table(Path::new("..\\resources\\three_key.ht"))?;
+    parse_table("three_key.ht")
+}
+
+#[test]
+fn table_compat_150() -> Result<()> {
+    parse_table("backward_compatability/1.5.0/table/0.ht")?; // Doesn't use LEB128
+    parse_table("backward_compatability/1.5.0/table/1.ht")?; // Negative LEB128 Int64
+    parse_table("backward_compatability/1.5.0/table/2.ht")?; // Doesn't use LEB128
+    parse_table("backward_compatability/1.5.0/table/3.ht")?; // Negative LEB128 Int64
+    parse_table("backward_compatability/1.5.0/table/4.ht")?;
+    parse_table("backward_compatability/1.5.0/table/5.ht")?;
+    parse_table("backward_compatability/1.5.0/table/6.ht")?;
+    parse_table("backward_compatability/1.5.0/table/7.ht")?;
     Ok(())
 }
 
 #[test]
-fn table_compat_150_0() -> Result<()> {
-    let _ = parser::load::table(Path::new(
-        "..\\resources\\backward_compatability\\1.5.0\\table\\0.ht",
-    ))?; // Doesn't use LEB128
+fn table_compat_140() -> Result<()> {
+    parse_table("backward_compatability/1.4.0/table/0.ht")?;
+    parse_table("backward_compatability/1.4.0/table/1.ht")?;
+    parse_table("backward_compatability/1.4.0/table/2.ht")?;
+    parse_table("backward_compatability/1.4.0/table/3.ht")?;
+    parse_table("backward_compatability/1.4.0/table/4.ht")?;
+    parse_table("backward_compatability/1.4.0/table/5.ht")?;
+    parse_table("backward_compatability/1.4.0/table/6.ht")?;
+    parse_table("backward_compatability/1.4.0/table/7.ht")?;
     Ok(())
 }
 
 #[test]
-fn table_compat_150_1() -> Result<()> {
-    let _ = parser::load::table(Path::new(
-        "..\\resources\\backward_compatability\\1.5.0\\table\\1.ht",
-    ))?; // Extra FF 01
+fn table_compat_130() -> Result<()> {
+    parse_table("backward_compatability/1.3.0/table/0.ht")?;
+    parse_table("backward_compatability/1.3.0/table/1.ht")?;
+    parse_table("backward_compatability/1.3.0/table/2.ht")?;
+    parse_table("backward_compatability/1.3.0/table/3.ht")?;
+    parse_table("backward_compatability/1.3.0/table/4.ht")?;
+    parse_table("backward_compatability/1.3.0/table/5.ht")?;
     Ok(())
 }
 
 #[test]
-fn table_compat_150_2() -> Result<()> {
-    let _ = parser::load::table(Path::new(
-        "..\\resources\\backward_compatability\\1.5.0\\table\\2.ht",
-    ))?; // Doesn't use LEB128
-    Ok(())
-}
-
-#[test]
-fn table_compat_150_3() -> Result<()> {
-    let _ = parser::load::table(Path::new(
-        "..\\resources\\backward_compatability\\1.5.0\\table\\3.ht",
-    ))?; // Extra FF 01
-    Ok(())
-}
-
-#[test]
-fn table_compat_150_4() -> Result<()> {
-    let _ = parser::load::table(Path::new(
-        "..\\resources\\backward_compatability\\1.5.0\\table\\4.ht",
-    ))?;
-    Ok(())
-}
-
-#[test]
-fn table_compat_150_5() -> Result<()> {
-    let _ = parser::load::table(Path::new(
-        "..\\resources\\backward_compatability\\1.5.0\\table\\5.ht",
-    ))?;
-    Ok(())
-}
-
-#[test]
-fn table_compat_150_6() -> Result<()> {
-    let _ = parser::load::table(Path::new(
-        "..\\resources\\backward_compatability\\1.5.0\\table\\6.ht",
-    ))?;
-    Ok(())
-}
-
-#[test]
-fn table_compat_150_7() -> Result<()> {
-    let _ = parser::load::table(Path::new(
-        "..\\resources\\backward_compatability\\1.5.0\\table\\7.ht",
-    ))?;
-    Ok(())
-}
-
-#[test]
-fn table_compat_140_0() -> Result<()> {
-    let _ = parser::load::table(Path::new(
-        "..\\resources\\backward_compatability\\1.4.0\\table\\0.ht",
-    ))?; // Doesn't use LEB128
-    Ok(())
-}
-
-#[test]
-fn table_compat_140_1() -> Result<()> {
-    let _ = parser::load::table(Path::new(
-        "..\\resources\\backward_compatability\\1.4.0\\table\\1.ht",
-    ))?; // Extra FF 01
-    Ok(())
-}
-
-#[test]
-fn table_compat_140_2() -> Result<()> {
-    let _ = parser::load::table(Path::new(
-        "..\\resources\\backward_compatability\\1.4.0\\table\\2.ht",
-    ))?; // Doesn't use LEB128
-    Ok(())
-}
-
-#[test]
-fn table_compat_140_3() -> Result<()> {
-    let _ = parser::load::table(Path::new(
-        "..\\resources\\backward_compatability\\1.4.0\\table\\3.ht",
-    ))?; // Extra FF 01
-    Ok(())
-}
-
-#[test]
-fn table_compat_140_4() -> Result<()> {
-    let _ = parser::load::table(Path::new(
-        "..\\resources\\backward_compatability\\1.4.0\\table\\4.ht",
-    ))?;
-    Ok(())
-}
-
-#[test]
-fn table_compat_140_5() -> Result<()> {
-    let _ = parser::load::table(Path::new(
-        "..\\resources\\backward_compatability\\1.4.0\\table\\5.ht",
-    ))?;
-    Ok(())
-}
-
-#[test]
-fn table_compat_140_6() -> Result<()> {
-    let _ = parser::load::table(Path::new(
-        "..\\resources\\backward_compatability\\1.4.0\\table\\6.ht",
-    ))?;
-    Ok(())
-}
-
-#[test]
-fn table_compat_140_7() -> Result<()> {
-    let _ = parser::load::table(Path::new(
-        "..\\resources\\backward_compatability\\1.4.0\\table\\7.ht",
-    ))?;
-    Ok(())
-}
-
-#[test]
-fn table_compat_130_0() -> Result<()> {
-    let _ = parser::load::table(Path::new(
-        "..\\resources\\backward_compatability\\1.3.0\\table\\0.ht",
-    ))?; // Doesn't use LEB128
-    Ok(())
-}
-
-#[test]
-fn table_compat_130_1() -> Result<()> {
-    let _ = parser::load::table(Path::new(
-        "..\\resources\\backward_compatability\\1.3.0\\table\\1.ht",
-    ))?; // Extra FF 01
-    Ok(())
-}
-
-#[test]
-fn table_compat_130_2() -> Result<()> {
-    let _ = parser::load::table(Path::new(
-        "..\\resources\\backward_compatability\\1.3.0\\table\\2.ht",
-    ))?; // Doesn't use LEB128
-    Ok(())
-}
-
-#[test]
-fn table_compat_130_3() -> Result<()> {
-    let _ = parser::load::table(Path::new(
-        "..\\resources\\backward_compatability\\1.3.0\\table\\3.ht",
-    ))?; // Extra FF 01
-    Ok(())
-}
-
-#[test]
-fn table_compat_130_4() -> Result<()> {
-    let _ = parser::load::table(Path::new(
-        "..\\resources\\backward_compatability\\1.3.0\\table\\4.ht",
-    ))?;
-    Ok(())
-}
-
-#[test]
-fn table_compat_130_5() -> Result<()> {
-    let _ = parser::load::table(Path::new(
-        "..\\resources\\backward_compatability\\1.3.0\\table\\5.ht",
-    ))?;
-    Ok(())
-}
-
-#[test]
-fn table_compat_120_0() -> Result<()> {
-    let _ = parser::load::table(Path::new(
-        "..\\resources\\backward_compatability\\1.2.0\\table\\0.ht",
-    ))?; // Doesn't use LEB128
-    Ok(())
-}
-
-#[test]
-fn table_compat_120_1() -> Result<()> {
-    let _ = parser::load::table(Path::new(
-        "..\\resources\\backward_compatability\\1.2.0\\table\\1.ht",
-    ))?; // Extra FF 01
-    Ok(())
-}
-
-#[test]
-fn table_compat_120_2() -> Result<()> {
-    let _ = parser::load::table(Path::new(
-        "..\\resources\\backward_compatability\\1.2.0\\table\\2.ht",
-    ))?; // Doesn't use LEB128
-    Ok(())
-}
-
-#[test]
-fn table_compat_120_3() -> Result<()> {
-    let _ = parser::load::table(Path::new(
-        "..\\resources\\backward_compatability\\1.2.0\\table\\3.ht",
-    ))?; // Extra FF 01
-    Ok(())
-}
-
-#[test]
-fn table_compat_120_4() -> Result<()> {
-    let _ = parser::load::table(Path::new(
-        "..\\resources\\backward_compatability\\1.2.0\\table\\4.ht",
-    ))?;
-    Ok(())
-}
-
-#[test]
-fn table_compat_120_5() -> Result<()> {
-    let _ = parser::load::table(Path::new(
-        "..\\resources\\backward_compatability\\1.2.0\\table\\5.ht",
-    ))?;
+fn table_compat_120() -> Result<()> {
+    parse_table("backward_compatability/1.2.0/table/0.ht")?;
+    parse_table("backward_compatability/1.2.0/table/1.ht")?;
+    parse_table("backward_compatability/1.2.0/table/2.ht")?;
+    parse_table("backward_compatability/1.2.0/table/3.ht")?;
+    parse_table("backward_compatability/1.2.0/table/4.ht")?;
+    parse_table("backward_compatability/1.2.0/table/5.ht")?;
     Ok(())
 }
 
 // #[test]
-// fn table_compat_110_0() -> Result<()> {
-//     let _ = parser::load::table(Path::new(
-//         "..\\resources\\backward_compatability\\1.1.0\\table\\0.ht",
-//     ))?; // Doesn't use LEB128
-//     Ok(())
-// }
-
-// #[test]
-// fn table_compat_110_1() -> Result<()> {
-//     let _ = parser::load::table(Path::new(
-//         "..\\resources\\backward_compatability\\1.1.0\\table\\1.ht",
-//     ))?; // Extra FF 01
-//     Ok(())
-// }
-
-// #[test]
-// fn table_compat_110_2() -> Result<()> {
-//     let _ = parser::load::table(Path::new(
-//         "..\\resources\\backward_compatability\\1.1.0\\table\\2.ht",
-//     ))?; // Doesn't use LEB128
-//     Ok(())
-// }
-
-// #[test]
-// fn table_compat_110_3() -> Result<()> {
-//     let _ = parser::load::table(Path::new(
-//         "..\\resources\\backward_compatability\\1.1.0\\table\\3.ht",
-//     ))?; // Extra FF 01
-//     Ok(())
-// }
-
-// #[test]
-// fn table_compat_110_4() -> Result<()> {
-//     let _ = parser::load::table(Path::new(
-//         "..\\resources\\backward_compatability\\1.1.0\\table\\4.ht",
-//     ))?;
-//     Ok(())
-// }
-
-// #[test]
-// fn table_compat_110_5() -> Result<()> {
-//     let _ = parser::load::table(Path::new(
-//         "..\\resources\\backward_compatability\\1.1.0\\table\\5.ht",
-//     ))?;
+// fn table_compat_110() -> Result<()> {
+//     parse_table("backward_compatability/1.1.0/table/0.ht")?;
+//     parse_table("backward_compatability/1.1.0/table/1.ht")?;
+//     parse_table("backward_compatability/1.1.0/table/2.ht")?;
+//     parse_table("backward_compatability/1.1.0/table/3.ht")?;
+//     parse_table("backward_compatability/1.1.0/table/4.ht")?;
+//     parse_table("backward_compatability/1.1.0/table/5.ht")?;
 //     Ok(())
 // }
