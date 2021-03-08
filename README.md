@@ -15,9 +15,9 @@ This crate is a parser for hail tables and hail matrix tables from the [Hail pro
 
 **Features:**
 - Parses normal tables, matrix tables, or individual components.
+- Can parse data directly into native Rust types with [Serde] (see [serde_hail]).
 - Handles both V1 and V2 component types.
-- Easy-to-extend building blocks.
-- Parses all tables in the [resources folder] in the Hail project source, with the exception of the [backward compatibility folder] (from which only some are parsed).
+- Parses all tables in the [resources folder] in the Hail project source, with the exception of the [backward compatibility folder] (from which most, but not all, are parsed).
 - Parsing of virtual and encoded schemas.
 - Generic physical encoding to support both LEB128 and little endian integer types at no runtime cost.
 
@@ -42,3 +42,5 @@ This crate is a parser for hail tables and hail matrix tables from the [Hail pro
 [resources folder]: https://github.com/hail-is/hail/tree/main/hail/src/test/resources
 [backward compatibility folder]: https://github.com/hail-is/hail/tree/main/hail/src/test/resources/backward_compatability
 [testing]: parser/tests
+[serde_hail]: serde_hail
+[Serde]: https://github.com/serde-rs/serde
