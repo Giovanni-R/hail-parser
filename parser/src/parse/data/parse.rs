@@ -8,6 +8,8 @@ use crate::types::{EType, HailValue};
 
 use super::encoders::Encoding;
 
+use super::helpers;
+
 /// A [HailValue::Struct] is a named map of values, much like a Rust struct.
 /// The values are encoded in order, without the names.
 /// Before each struct, an array of bites indicates whether each optional field is present using a
@@ -18,7 +20,7 @@ use super::encoders::Encoding;
 /// [bit-flags][+field 1][field 2][field 3][+field 4]
 /// [0000_0010][ value 1][value 2]         [ value 4]
 /// ```
-pub fn hail_struct<'i, E: Encoding>(
+pub(crate) fn hail_struct<'i, E: Encoding>(
     i: &'i [u8],
     mapping: &[(String, EType)],
 ) -> IResult<&'i [u8], HailValue> {
@@ -56,7 +58,7 @@ pub fn hail_struct<'i, E: Encoding>(
 
 /// A tuple is simply a struct from which we discard all the field names and maintain the order
 /// of the values.
-pub fn tuple<'i, E: Encoding>(
+pub(crate) fn tuple<'i, E: Encoding>(
     i: &'i [u8],
     mapping: &[(String, EType)],
 ) -> IResult<&'i [u8], HailValue> {
@@ -97,7 +99,10 @@ pub fn tuple<'i, E: Encoding>(
 /// prepended to the data.
 /// If the internal array type is not required, then the array also has presence array covering
 /// each value.
-pub fn array<'i, E: Encoding>(i: &'i [u8], inner_type: &EType) -> IResult<&'i [u8], HailValue> {
+pub(crate) fn array<'i, E: Encoding>(
+    i: &'i [u8],
+    inner_type: &EType,
+) -> IResult<&'i [u8], HailValue> {
     let (rest, sequence) = helpers::sequence::<E>(i, inner_type)?;
     Ok((rest, HailValue::Array(sequence)))
 }
@@ -105,14 +110,21 @@ pub fn array<'i, E: Encoding>(i: &'i [u8], inner_type: &EType) -> IResult<&'i [u
 /// A [HailValue::Set] is essentially an Array, with the exception that the recovered values
 /// should be unique.
 /// [HailValue::Missing] is also a valid value in the set.
-pub fn set<'i, E: Encoding>(i: &'i [u8], inner_type: &EType) -> IResult<&'i [u8], HailValue> {
+pub(crate) fn set<'i, E: Encoding>(
+    i: &'i [u8],
+    inner_type: &EType,
+) -> IResult<&'i [u8], HailValue> {
     let (rest, sequence) = helpers::sequence::<E>(i, inner_type)?;
     Ok((rest, HailValue::Set(sequence)))
 }
 
-/// A [HailValue::Dict] is an array of [ETypeShape::BaseStruct], where each struct has a key and
+/// A [HailValue::Dict] is an array of
+/// [ETypeShape::BaseStruct](crate::types::ETypeShape::BaseStruct), where each struct has a key and
 /// a value.
-pub fn dict<'i, E: Encoding>(i: &'i [u8], inner_type: &EType) -> IResult<&'i [u8], HailValue> {
+pub(crate) fn dict<'i, E: Encoding>(
+    i: &'i [u8],
+    inner_type: &EType,
+) -> IResult<&'i [u8], HailValue> {
     // Could be simplified by unpacking the inner_type and parsing the key and value types directly.
     // Will skip for now however, to keep the parser close to the EType structure.
     let (rest, sequence) = helpers::sequence::<E>(i, inner_type)?;
@@ -148,9 +160,10 @@ pub fn dict<'i, E: Encoding>(i: &'i [u8], inner_type: &EType) -> IResult<&'i [u8
     Ok((rest, HailValue::Dict(dict)))
 }
 
-/// A [HailValue::Interval] is a [ETypeShape::BaseStruct] with two bounds of the same type, and two
-/// boolean flags to indicate whether the edges of the interval are included.
-pub fn interval<'i, E: Encoding>(
+/// A [HailValue::Interval] is a [ETypeShape::BaseStruct](crate::types::ETypeShape::BaseStruct)
+/// with two bounds of the same type, and two boolean flags to indicate whether the edges of the
+/// interval are included.
+pub(crate) fn interval<'i, E: Encoding>(
     i: &'i [u8],
     struct_mapping: &[(String, EType)],
 ) -> IResult<&'i [u8], HailValue> {
@@ -196,7 +209,7 @@ pub fn interval<'i, E: Encoding>(
 ///
 /// This is followed up by a sequence of elements layed out in column major order (or f-order),
 /// as suggested by the name.
-pub fn ndarray_column_major<'i, E: Encoding>(
+pub(crate) fn ndarray_column_major<'i, E: Encoding>(
     i: &'i [u8],
     inner_type: &EType,
     n: u32,
@@ -210,7 +223,7 @@ pub fn ndarray_column_major<'i, E: Encoding>(
         dims.push(d);
     }
 
-    // Overflow will cause a panic.
+    // Overflow will cause a panic in debug mode, only memory-safe in release mode.
     let number_of_elements = dims.iter().product();
 
     // Assumes the inner type is required.
@@ -242,7 +255,7 @@ pub fn ndarray_column_major<'i, E: Encoding>(
     };
 
     match maybe_array {
-        Ok(array) => Ok((rest, HailValue::NdArray(array))),
+        Ok(array) => Ok((rest, HailValue::NDArray(array))),
         Err(_) => Err(nom::Err::Failure(nom::error::Error::new(
             i,
             nom::error::ErrorKind::ParseTo,
@@ -251,7 +264,10 @@ pub fn ndarray_column_major<'i, E: Encoding>(
 }
 
 /// A [HailValue::Locus] is a string and a number in succession with no spacing.
-pub fn locus<'i, E: Encoding>(i: &'i [u8], reference_genome: &str) -> IResult<&'i [u8], HailValue> {
+pub(crate) fn locus<'i, E: Encoding>(
+    i: &'i [u8],
+    reference_genome: &str,
+) -> IResult<&'i [u8], HailValue> {
     let (rest, contig) = E::string(i)?;
     let (rest, position) = E::u32(rest)?;
     Ok((
@@ -265,17 +281,17 @@ pub fn locus<'i, E: Encoding>(i: &'i [u8], reference_genome: &str) -> IResult<&'
 }
 
 /// A [HailValue::Call] is represented by a u32.
-pub fn call<E: Encoding>(i: &[u8]) -> IResult<&[u8], HailValue> {
+pub(crate) fn call<E: Encoding>(i: &[u8]) -> IResult<&[u8], HailValue> {
     let (rest, one) = E::u32(i)?;
     Ok((rest, HailValue::Call(one)))
 }
 
-pub fn string<E: Encoding>(i: &[u8]) -> IResult<&[u8], HailValue> {
+pub(crate) fn string<E: Encoding>(i: &[u8]) -> IResult<&[u8], HailValue> {
     let (rest, s) = E::string(i)?;
     Ok((rest, HailValue::String(s)))
 }
 
-pub fn f32<E: Encoding>(i: &[u8]) -> IResult<&[u8], HailValue> {
+pub(crate) fn f32<E: Encoding>(i: &[u8]) -> IResult<&[u8], HailValue> {
     let (rest, float) = E::f32(i)?;
     if float.is_nan() {
         Ok((rest, HailValue::Missing))
@@ -284,7 +300,7 @@ pub fn f32<E: Encoding>(i: &[u8]) -> IResult<&[u8], HailValue> {
     }
 }
 
-pub fn f64<E: Encoding>(i: &[u8]) -> IResult<&[u8], HailValue> {
+pub(crate) fn f64<E: Encoding>(i: &[u8]) -> IResult<&[u8], HailValue> {
     let (rest, float) = E::f64(i)?;
     if float.is_nan() {
         Ok((rest, HailValue::Missing))
@@ -293,140 +309,17 @@ pub fn f64<E: Encoding>(i: &[u8]) -> IResult<&[u8], HailValue> {
     }
 }
 
-pub fn u32<E: Encoding>(i: &[u8]) -> IResult<&[u8], HailValue> {
+pub(crate) fn u32<E: Encoding>(i: &[u8]) -> IResult<&[u8], HailValue> {
     let (rest, int) = E::u32(i)?;
     Ok((rest, HailValue::Int32(int)))
 }
 
-pub fn i64<E: Encoding>(i: &[u8]) -> IResult<&[u8], HailValue> {
+pub(crate) fn i64<E: Encoding>(i: &[u8]) -> IResult<&[u8], HailValue> {
     let (rest, int) = E::i64(i)?;
     Ok((rest, HailValue::Int64(int)))
 }
 
-pub fn bool<E: Encoding>(i: &[u8]) -> IResult<&[u8], HailValue> {
+pub(crate) fn bool<E: Encoding>(i: &[u8]) -> IResult<&[u8], HailValue> {
     let (rest, flag) = E::bool(i)?;
     Ok((rest, HailValue::Boolean(flag)))
-}
-
-mod helpers {
-    use nom::bytes::complete as bytes;
-    use nom::IResult;
-
-    use crate::{
-        parse::Encoding,
-        types::{EType, HailValue},
-    };
-
-    pub(crate) fn sequence<'i, E: Encoding>(
-        i: &'i [u8],
-        inner_type: &EType,
-    ) -> IResult<&'i [u8], Vec<HailValue>> {
-        match inner_type.required {
-            true => sequence_without_check::<E>(i, inner_type),
-            false => sequence_with_check::<E>(i, inner_type),
-        }
-    }
-
-    fn sequence_with_check<'i, E: Encoding>(
-        i: &'i [u8],
-        inner_type: &EType,
-    ) -> IResult<&'i [u8], Vec<HailValue>> {
-        let (rest, len) = E::u32(i)?;
-
-        if len == 0 {
-            return Ok((rest, vec![]));
-        }
-
-        let (mut rest, presence_vec) = presence_array(rest, len as usize)?;
-        let mut presence_iter = presence_vec.into_iter();
-
-        let mut result: Vec<HailValue> = Vec::new();
-
-        for _ in 0..len {
-            match presence_iter.next() {
-                Some(false) => {
-                    result.push(HailValue::Missing);
-                }
-                Some(true) => {
-                    let (inner_rest, decoded_type) = inner_type.decode_from::<E>(rest)?;
-                    rest = inner_rest;
-                    result.push(decoded_type);
-                }
-                // presence_iter shouldn't exaust before the lenth of the array.
-                None => {
-                    return Err(nom::Err::Failure(nom::error::Error::new(
-                        i,
-                        nom::error::ErrorKind::TagBits,
-                    )))
-                }
-            }
-        }
-
-        Ok((rest, result))
-    }
-
-    /// A Hail array declares its length at the beginning and then encodes each element without
-    /// spacing.
-    fn sequence_without_check<'i, E: Encoding>(
-        i: &'i [u8],
-        inner_type: &EType,
-    ) -> IResult<&'i [u8], Vec<HailValue>> {
-        let (rest, len) = E::u32(i)?;
-
-        sequence_with_given_length_without_check::<E>(rest, inner_type, len.into())
-    }
-
-    pub(crate) fn sequence_with_given_length_without_check<'i, E: Encoding>(
-        i: &'i [u8],
-        inner_type: &EType,
-        len: i64,
-    ) -> IResult<&'i [u8], Vec<HailValue>> {
-        let mut rest = i;
-
-        let mut result: Vec<HailValue> = Vec::new();
-
-        for _ in 0..len {
-            let (inner_rest, decoded_type) = inner_type.decode_from::<E>(rest)?;
-            rest = inner_rest;
-            result.push(decoded_type);
-        }
-
-        Ok((rest, result))
-    }
-
-    /// A presence array is represented as an array of bytes, long enough to have a bit for each
-    /// field considered.
-    ///
-    /// The bits are considered least-significant first, and first byte first.
-    /// [(8)(7)(6)(5)_(4)(3)(2)(1), (16)(15)(14)(13)_(12)(11)(10)(9)]
-    pub(crate) fn presence_array(i: &[u8], field_count: usize) -> IResult<&[u8], Vec<bool>> {
-        // Compute how many bytes are needed to have one bit per field.
-        let number_of_bytes_to_take = {
-            let extra = field_count % 8;
-            if extra == 0 {
-                field_count / 8
-            } else {
-                1 + ((field_count - extra) / 8)
-            }
-        };
-
-        let (rest, bytes) = bytes::take(number_of_bytes_to_take)(i)?;
-
-        let mut are_present = Vec::<bool>::new();
-
-        // The bytes are in order but bits must be read in reverse
-        // (that is, the digit of lowest significance or right-most corresponds to earlier fields).
-        for byte in bytes {
-            are_present.push((byte & 0b_0000_0001) == 0);
-            are_present.push((byte & 0b_0000_0010) == 0);
-            are_present.push((byte & 0b_0000_0100) == 0);
-            are_present.push((byte & 0b_0000_1000) == 0);
-            are_present.push((byte & 0b_0001_0000) == 0);
-            are_present.push((byte & 0b_0010_0000) == 0);
-            are_present.push((byte & 0b_0100_0000) == 0);
-            are_present.push((byte & 0b_1000_0000) == 0);
-        }
-
-        Ok((rest, are_present))
-    }
 }

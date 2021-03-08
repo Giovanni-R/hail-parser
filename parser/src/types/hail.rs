@@ -57,7 +57,7 @@ pub enum HailValue {
     Array(Vec<HailValue>),
     Set(Vec<HailValue>),
     Dict(BTreeMap<HailValue, HailValue>),
-    NdArray(ndarray::ArrayD<HailValue>),
+    NDArray(ndarray::ArrayD<HailValue>),
     Interval {
         start: Box<HailValue>,
         end: Box<HailValue>,
@@ -92,7 +92,7 @@ pub enum HailValue {
 /// [HailValue::Missing] (the same value as for missing structs/array elements).
 /// Order-wise, [HailValue::Missing] will always be the 'smallest' value and equal to itself.
 ///
-/// More: https://doc.rust-lang.org/std/cmp/trait.PartialOrd.html#how-can-i-implement-partialord
+/// More: <https://doc.rust-lang.org/std/cmp/trait.PartialOrd.html#how-can-i-implement-partialord>
 mod hail_value_comparisons {
     use super::HailValue;
 

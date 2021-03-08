@@ -19,7 +19,7 @@ pub fn parse_rows<E: Encoding>(
     }
 }
 
-pub fn _parse_rows<'i, E: Encoding>(
+fn _parse_rows<'i, E: Encoding>(
     i: &'i [u8],
     row_type: &EType,
 ) -> IResult<&'i [u8], Vec<HailValue>> {
