@@ -3,4 +3,5 @@
 members = [
     "app",
     "parser",
+    "serde_hail"
 ]
