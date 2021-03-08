@@ -79,7 +79,7 @@ impl EType {
                 ..
             } => parse::f64::<E>(i),
 
-            // [Int32] with little endian u32 encoding
+            // [Int32]
             EType {
                 shape: ETypeShape::Int32,
                 virtual_hint: None,

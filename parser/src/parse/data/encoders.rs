@@ -10,6 +10,11 @@ use nom::{named, take, IResult};
 /// booleans are encoded as a byte (`0u8`/`1u8`), and strings as UTF-8 byte arrays with length
 /// prepended (a u32).
 pub trait Encoding {
+    fn u8(i: &[u8]) -> IResult<&[u8], u8> {
+        let (rest, value) = take1(i)?;
+        Ok((rest, value[0]))
+    }
+
     fn u32(i: &[u8]) -> IResult<&[u8], u32> {
         nom::number::complete::le_u32::<&[u8], nom::error::Error<&[u8]>>(i)
     }
@@ -45,13 +50,35 @@ pub trait Encoding {
         }
     }
 
-    fn string(i: &[u8]) -> IResult<&[u8], String> {
+    fn bytes(i: &[u8]) -> IResult<&[u8], &[u8]> {
         let (rest, len) = Self::u32(i)?;
 
-        let (rest, raw_string): (&[u8], &[u8]) = bytes::take(len)(rest)?;
+        bytes::take(len)(rest)
+    }
+
+    fn byte_buf(i: &[u8]) -> IResult<&[u8], Vec<u8>> {
+        let (rest, bytes): (&[u8], &[u8]) = Self::bytes(i)?;
+
+        Ok((rest, bytes.to_vec()))
+    }
+
+    fn str(i: &[u8]) -> IResult<&[u8], &str> {
+        let (rest, raw_string): (&[u8], &[u8]) = Self::bytes(i)?;
 
         match std::str::from_utf8(raw_string) {
-            Ok(s) => Ok((rest, s.to_owned())),
+            Ok(s) => Ok((rest, s)),
+            Err(_) => Err(nom::Err::Failure(nom::error::Error::new(
+                i,
+                nom::error::ErrorKind::ParseTo,
+            ))),
+        }
+    }
+
+    fn string(i: &[u8]) -> IResult<&[u8], String> {
+        let (rest, raw_string): (&[u8], Vec<u8>) = Self::byte_buf(i)?;
+
+        match String::from_utf8(raw_string) {
+            Ok(s) => Ok((rest, s)),
             Err(_) => Err(nom::Err::Failure(nom::error::Error::new(
                 i,
                 nom::error::ErrorKind::ParseTo,

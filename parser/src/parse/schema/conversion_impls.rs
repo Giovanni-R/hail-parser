@@ -1,13 +1,13 @@
 use crate::types::metadata::{component, component_1, component_2, ComponentMetadata};
 
-impl Into<ComponentMetadata> for component_1::RvdMetadataV1 {
-    fn into(self) -> ComponentMetadata {
+impl From<component_1::RvdMetadataV1> for ComponentMetadata {
+    fn from(original: component_1::RvdMetadataV1) -> Self {
         let component_1::RvdMetadataV1 {
             rvd_type,
             codec_spec,
             part_files,
             ..
-        } = self;
+        } = original;
 
         let component_1::RvdTypeSchema {
             row_schema,
@@ -33,14 +33,14 @@ impl Into<ComponentMetadata> for component_1::RvdMetadataV1 {
     }
 }
 
-impl Into<ComponentMetadata> for component_1::UnpartitionedRvdMetadataV1 {
-    fn into(self) -> ComponentMetadata {
+impl From<component_1::UnpartitionedRvdMetadataV1> for ComponentMetadata {
+    fn from(original: component_1::UnpartitionedRvdMetadataV1) -> Self {
         let component_1::UnpartitionedRvdMetadataV1 {
             row_type,
             codec_spec,
             part_files,
             ..
-        } = self;
+        } = original;
 
         let encoded_type = super::helpers::virtual_type_to_default_encoded_type(&row_type);
 
@@ -61,13 +61,13 @@ impl Into<ComponentMetadata> for component_1::UnpartitionedRvdMetadataV1 {
     }
 }
 
-impl Into<ComponentMetadata> for component_2::RVDMetadataV2 {
-    fn into(self) -> ComponentMetadata {
+impl From<component_2::RVDMetadataV2> for ComponentMetadata {
+    fn from(original: component_2::RVDMetadataV2) -> Self {
         let component_2::RVDMetadataV2 {
             key,
             codec_spec,
             part_files,
-        } = self;
+        } = original;
 
         let (std_codec_spec, inner_buffer_spec) = match codec_spec {
             component_2::ComponentCodecSpecV2::TypedCodecSpec(inner) => {

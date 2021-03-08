@@ -16,8 +16,8 @@ pub use table::TableMetadata;
 /// It uses the "name" field in the json to disambiguate between matrix tables, tables, and the
 /// various types of component.
 ///
-/// Note: some metadata elements have custom deserialisation implemented in the
-/// [parse::schema](crate::parse::schema) module to allow the virtual and encoded schemas to be
+/// Note: some metadata elements have custom deserialisation implemented in the private
+/// parser::parse::schema module to allow the virtual and encoded schemas to be
 /// parsed along with the document.
 /// Note 2: A generalised [ComponentMetadata] type is also present to harmonise the various
 /// component metadata formats. The other component metadata types implement
