@@ -12,7 +12,7 @@ use super::error::SchemaParsingError;
 /// It also handles error conversion from the nom error.
 pub trait SchemaFromString: Sized {
     fn parse_type(schema: &str) -> Result<Self, SchemaParsingError> {
-        let result = Self::take_type(&schema);
+        let result = Self::take_type(schema);
 
         match result {
             Ok((_, schema)) => Ok(schema),

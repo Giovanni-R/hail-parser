@@ -463,7 +463,7 @@ impl<'a, 'de, 'et, E: Encoding> MapAccess<'de> for MapSequenceAccess<'a, 'de, 'e
         self.de.load_options_flags(self.number_of_options)?;
 
         // Set the structure to the upcoming element
-        self.de.structure = &self.key_structure;
+        self.de.structure = self.key_structure;
 
         let result = seed.deserialize(&mut *self.de)?;
 
@@ -478,7 +478,7 @@ impl<'a, 'de, 'et, E: Encoding> MapAccess<'de> for MapSequenceAccess<'a, 'de, 'e
         V: DeserializeSeed<'de>,
     {
         // Set the structure to the upcoming element
-        self.de.structure = &self.value_structure;
+        self.de.structure = self.value_structure;
 
         let result = seed.deserialize(&mut *self.de)?;
 

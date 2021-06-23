@@ -18,7 +18,7 @@ impl EType {
                 shape: ETypeShape::BaseStruct(_),
                 virtual_hint: Some(VirtualHint::Locus(genome)),
                 ..
-            } => parse::locus::<E>(i, &genome),
+            } => parse::locus::<E>(i, genome),
             // Interval as Struct
             EType {
                 shape: ETypeShape::BaseStruct(ref inner_mapping),
