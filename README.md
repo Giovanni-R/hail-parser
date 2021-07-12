@@ -1,5 +1,7 @@
 # ***Hail Table Parser***
 
+> This project has been moved to my public account [here](https://github.com/QuartzLibrary/hail_parser).
+
 This crate is a parser for hail tables and hail matrix tables from the [Hail project].
 
 
